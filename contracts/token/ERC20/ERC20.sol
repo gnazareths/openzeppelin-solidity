@@ -19,6 +19,8 @@ contract ERC20 is IERC20 {
 
     mapping (address => uint256) private _balances;
 
+    mapping (address => uint256) private _cummulativeBalances;
+
     mapping (address => mapping (address => uint256)) private _allowed;
 
     uint256 private _totalSupply;
@@ -37,6 +39,13 @@ contract ERC20 is IERC20 {
     */
     function balanceOf(address owner) public view returns (uint256) {
         return _balances[owner];
+    }
+
+    /**
+    * Here's the extension
+    */
+    function cummulativeBalanceOf(address owner) public view returns (uint256) {
+        return _cummulativeBalances[owner]
     }
 
     /**
@@ -138,6 +147,7 @@ contract ERC20 is IERC20 {
 
         _balances[from] = _balances[from].sub(value);
         _balances[to] = _balances[to].add(value);
+        _cummulativeBalances[to] = _cummulativeBalances[to].add(value);
         emit Transfer(from, to, value);
     }
 
@@ -153,6 +163,7 @@ contract ERC20 is IERC20 {
 
         _totalSupply = _totalSupply.add(value);
         _balances[account] = _balances[account].add(value);
+        _cummulativeBalances[account] = _cummulativeBalances[account].add(value)
         emit Transfer(address(0), account, value);
     }
 
